@@ -41,58 +41,62 @@
         }
     </style>
 
-    <!-- Auto-Icon Generator Script -->
+    <!-- Auto-Icon Generator Script (SVG to PNG for iOS) -->
     <script>
         window.onload = function() {
-            // 建立一個 512x512 的畫布來繪製 Icon
-            const canvas = document.createElement('canvas');
-            canvas.width = 512;
-            canvas.height = 512;
-            const ctx = canvas.getContext('2d');
+            // 定義 SVG 字串 (天橋立 Glass UI 設計)
+            const svgString = `
+            <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#a1c4fd" />
+                  <stop offset="50%" stop-color="#c2e9fb" />
+                  <stop offset="100%" stop-color="#2c3e50" />
+                </linearGradient>
+                <linearGradient id="bridgeGradient" x1="50%" y1="100%" x2="50%" y2="0%">
+                  <stop offset="0%" stop-color="rgba(255, 255, 255, 0.9)" />
+                  <stop offset="100%" stop-color="rgba(255, 255, 255, 0.2)" />
+                </linearGradient>
+                <linearGradient id="glassShine" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="rgba(255,255,255,0.7)" />
+                  <stop offset="40%" stop-color="rgba(255,255,255,0.1)" />
+                  <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+                </linearGradient>
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="10" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
+              <rect width="512" height="512" fill="url(#bgGradient)" />
+              <path d="M 180 512 C 180 450, 220 350, 240 280 S 280 150, 260 100 C 255 85, 250 80, 250 60" stroke="url(#bridgeGradient)" stroke-width="40" fill="none" stroke-linecap="round" style="filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.15)); mix-blend-mode: overlay;" />
+              <circle cx="250" cy="60" r="25" fill="#ffffff" filter="url(#glow)" opacity="0.9" />
+              <rect width="512" height="512" fill="url(#glassShine)" style="mix-blend-mode: soft-light;" />
+              <rect x="2" y="2" width="508" height="508" rx="0" ry="0" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="4" />
+            </svg>`;
 
-            // 1. 背景：白色 (日本國旗底色)
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, 512, 512);
+            // 建立 Image 物件
+            const img = new Image();
+            // 將 SVG 轉為 Base64
+            const svg64 = btoa(unescape(encodeURIComponent(svgString)));
+            const b64Start = 'data:image/svg+xml;base64,';
+            const image64 = b64Start + svg64;
+            
+            img.src = image64;
 
-            // 2. 紅色圓形 (日之丸)
-            ctx.beginPath();
-            ctx.arc(256, 256, 180, 0, 2 * Math.PI, false);
-            ctx.fillStyle = '#bc002d'; // 日本國旗紅
-            ctx.fill();
-
-            // 3. 飛機圖示 (白色剪影)
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            // 繪製一個簡單的飛機形狀
-            ctx.moveTo(256, 130);
-            ctx.lineTo(290, 220);
-            ctx.lineTo(380, 250); // 右翼尖
-            ctx.lineTo(290, 280);
-            ctx.lineTo(290, 350);
-            ctx.lineTo(330, 390); // 尾翼右
-            ctx.lineTo(256, 380); // 尾端
-            ctx.lineTo(182, 390); // 尾翼左
-            ctx.lineTo(222, 350);
-            ctx.lineTo(222, 280);
-            ctx.lineTo(132, 250); // 左翼尖
-            ctx.lineTo(222, 220);
-            ctx.closePath();
-            ctx.fill();
-
-            // 4. 文字 "2026" (選用，為了辨識度，這裡用簡潔的飛機就好，若要加文字可取消註解)
-            /*
-            ctx.font = 'bold 80px Arial';
-            ctx.fillStyle = '#333';
-            ctx.textAlign = 'center';
-            ctx.fillText('2026', 256, 450);
-            */
-
-            // 轉換為 Data URL
-            const iconUrl = canvas.toDataURL('image/png');
-
-            // 設定給 iOS 和瀏覽器
-            document.getElementById('apple-icon').href = iconUrl;
-            document.getElementById('favicon').href = iconUrl;
+            img.onload = function() {
+                // 繪製到 Canvas 並轉為 PNG (確保 iOS 相容性)
+                const canvas = document.createElement('canvas');
+                canvas.width = 512;
+                canvas.height = 512;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                
+                const pngUrl = canvas.toDataURL('image/png');
+                
+                // 設定 Icon
+                document.getElementById('apple-icon').href = pngUrl;
+                document.getElementById('favicon').href = pngUrl;
+            };
         };
     </script>
 </head>
