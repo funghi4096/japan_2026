@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026/05 日本大阪天橋立之旅</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0f2f5;
+            -webkit-font-smoothing: antialiased;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Data Structure based on user's file
+        const tripData = [
+            {
+                date: "2026/05/09",
+                day: "六",
+                location: "神戶",
+                hotel: "Comfort Hotel Kobe Sannomiya",
+                highlights: [
+                    { time: "10:15", type: "flight", title: "星宇航空 JR822 出發", desc: "台北 TPE ➔ 關西 KIX (14:00 抵達)" },
+                    { time: "14:30", type: "transport", title: "關西機場租車", desc: "預計直接租車前往神戶" },
+                    { time: "16:00", type: "transport", title: "前往神戶", desc: "車程約 1~1.5 小時" },
+                    { time: "18:00", type: "activity", title: "神戶三宮周邊", desc: "辦理入住，周邊簡單晚餐或逛街" }
+                ]
+            },
+            {
+                date: "2026/05/10",
+                day: "日",
+                location: "神戶",
+                hotel: "Comfort Hotel Kobe Sannomiya",
+                special: "🎂 JOEY 生日",
+                highlights: [
+                    { time: "10:00", type: "activity", title: "北野異人館街 (建議)", desc: "參觀風見雞之館、萌黃之館，感受異國風情" },
+                    { time: "13:00", type: "food", title: "神戶牛排午餐 (慶生)", desc: "慶祝 JOEY 生日，預約知名鐵板燒" },
+                    { time: "15:30", type: "activity", title: "美利堅公園 & 神戶港", desc: "神戶地標塔、BE KOBE 標誌拍照" },
+                    { time: "19:00", type: "activity", title: "摩耶山 掬星台 (建議)", desc: "日本三大夜景之一 (視體力決定)" }
+                ]
+            },
+            {
+                date: "2026/05/11",
+                day: "一",
+                location: "伊根/天橋立",
+                hotel: "神風樓 (含早晚餐)",
+                note: "房價 JPY 132,900 (兩晚)",
+                highlights: [
+                    { time: "09:30", type: "transport", title: "前往伊根", desc: "自駕前往海之京都 (車程約 2 小時)" },
+                    { time: "12:00", type: "food", title: "舞鶴海鮮市場 (建議中途)", desc: "享用新鮮海鮮丼飯" },
+                    { time: "14:30", type: "activity", title: "伊根舟屋群", desc: "入住神風樓，漫步舟屋街道，欣賞獨特水上家屋" },
+                    { time: "18:00", type: "food", title: "飯店晚餐", desc: "享用神風樓精緻料理" }
+                ]
+            },
+            {
+                date: "2026/05/12",
+                day: "二",
+                location: "伊根/天橋立",
+                hotel: "神風樓",
+                highlights: [
+                    { time: "09:00", type: "activity", title: "伊根灣遊覽船", desc: "搭船餵食海鷗，從海上看舟屋" },
+                    { time: "11:30", type: "activity", title: "天橋立 View Land", desc: "搭乘纜車/單軌電車，從飛龍觀看天橋立" },
+                    { time: "14:00", type: "activity", title: "智恩寺 & 迴旋橋", desc: "參拜文殊菩薩，觀看船過橋開的景象" },
+                    { time: "15:30", type: "activity", title: "元伊勢 籠神社 (建議)", desc: "丹後國一宮，歷史悠久的神社" }
+                ]
+            },
+            {
+                date: "2026/05/13",
+                day: "三",
+                location: "龜岡市",
+                hotel: "龜岡市住宿 (未定)",
+                highlights: [
+                    { time: "10:00", type: "transport", title: "前往龜岡", desc: "往南移動，接近京都市區外圍" },
+                    { time: "13:00", type: "activity", title: "保津川遊船 (建議)", desc: "體驗刺激的溪流泛舟 (龜岡出發)" },
+                    { time: "15:30", type: "activity", title: "出雲大神宮 (建議)", desc: "丹波國一宮，以結緣聞名" }
+                ]
+            },
+            {
+                date: "2026/05/14",
+                day: "四",
+                location: "龜岡市",
+                hotel: "龜岡市住宿 (未定)",
+                highlights: [
+                    { time: "09:30", type: "activity", title: "嵯峨野觀光小火車 (建議)", desc: "龜岡站搭乘，前往嵐山方向遊覽" },
+                    { time: "11:00", type: "activity", title: "嵐山半日遊 (建議)", desc: "渡月橋、竹林之道 (距離龜岡很近)" },
+                    { time: "16:00", type: "activity", title: "湯之花溫泉鄉 (建議)", desc: "若住宿在此，享受溫泉放鬆" }
+                ]
+            },
+            {
+                date: "2026/05/15",
+                day: "五",
+                location: "臨空城",
+                hotel: "Odysis Suite Osaka",
+                note: "大阪奧迪西斯套房飯店",
+                highlights: [
+                    { time: "10:00", type: "transport", title: "前往臨空城/泉佐野", desc: "往關西機場方向移動" },
+                    { time: "12:30", type: "activity", title: "堺市 (Sakai) 觀光 (建議)", desc: "仁德天皇陵古墳、利休之杜 (距離臨空城30分)" },
+                    { time: "16:00", type: "activity", title: "Rinku Premium Outlets", desc: "飯店附近，大型 Outlet 購物" },
+                    { time: "19:00", type: "food", title: "臨空城晚餐", desc: "Outlet 或 Seacle 購物中心用餐" }
+                ]
+            },
+            {
+                date: "2026/05/16",
+                day: "六",
+                location: "臨空城",
+                hotel: "Odysis Suite Osaka",
+                highlights: [
+                    { time: "10:00", type: "activity", title: "臨空公園", desc: "早晨散步，欣賞海景與飛機起降" },
+                    { time: "13:00", type: "activity", title: "AEON MALL 臨空泉南 (建議)", desc: "最後的大型超市補貨、藥妝採買" },
+                    { time: "16:00", type: "activity", title: "整理行李", desc: "打包戰利品，準備隔日返台" }
+                ]
+            },
+            {
+                date: "2026/05/17",
+                day: "日",
+                location: "HOME",
+                hotel: "溫暖的家",
+                highlights: [
+                    { time: "10:00", type: "transport", title: "前往關西機場", desc: "還車，辦理登機手續" },
+                    { time: "13:25", type: "flight", title: "星宇航空 JR821 起飛", desc: "KIX ➔ TPE (15:20 抵達)" }
+                ]
+            }
+        ];
+
+        const shoppingList = {
+            drugs: [
+                { name: "傳明酸 (Pelack T)", desc: "喉嚨紅腫、爆痛、發燒前兆", icon: "pill" },
+                { name: "LULU 噴霧", desc: "液體較濃稠，適合喉嚨發炎", icon: "spray" },
+                { name: "Chocola 噴霧", desc: "含 CPC 殺菌，主攻嘴破(口內炎)", icon: "spray" },
+                { name: "龍角散", desc: "喉嚨癢、卡痰、咳嗽 (粉/喉糖)", icon: "package" },
+            ],
+            supermarket: [
+                { name: "S&B 吐司抹醬", desc: "菠蘿、巧克力、披薩口味 (塗抹後烤)", category: "調味" },
+                { name: "Horoyoi 微醉氣泡酒", desc: "黑醋栗、蜂蜜檸檬 (晚餐搭配)", category: "飲品" },
+                { name: "日清 Cup Noodle Pro", desc: "減鹽高蛋白版", category: "食品" },
+                { name: "Hori Nishiki 烤肉粉", desc: "金色高級款 (含白松露鹽)", category: "調味" },
+                { name: "味之素 軟包裝蠔油", desc: "擠壓式包裝，空氣不易進入", category: "調味" },
+                { name: "味之素 丸雞高湯粉", desc: "減鹽版，雞肉風味", category: "調味" },
+                { name: "昭和27年炒飯濃縮粉", desc: "自帶鍋氣，2-3人份半包", category: "調味" },
+                { name: "Heinz 特選多蜜醬", desc: "Demi-glace sauce，漢堡排用", category: "醬料" },
+                { name: "奶油/巧克力威化捲", desc: "餅乾酥脆，夾心香濃", category: "零食" },
+                { name: "Calbee 冬季限定洋芋片", desc: "淋有巧克力，鹹甜風味", category: "零食" },
+                { name: "千葉縣產花生", desc: "香氣厚重", category: "零食" },
+                { name: "平底鍋專用鋁箔紙", desc: "防沾黏，煎魚好用", category: "用品" },
+            ]
+        };
+
+        const Icon = ({ name, size = 18, className = "" }) => {
+            const lucideIcons = window.lucide;
+            if (!lucideIcons) return null;
+            
+            const IconComponent = lucideIcons.icons[name];
+            if (!IconComponent) return null;
+
+            // Convert kebab-case props to camelCase manually for React
+            return (
+                <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width={size} 
+                    height={size} 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    className={className}
+                    dangerouslySetInnerHTML={{ __html: IconComponent.toSvg().match(/>(.*)<\/svg>/)[1] }}
+                />
+            );
+        };
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState("itinerary");
+            const [selectedDay, setSelectedDay] = useState(0);
+
+            // Trigger lucide icon replacement on mount and updates
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            });
+
+            return (
+                <div className="max-w-md mx-auto h-screen bg-gray-50 flex flex-col overflow-hidden shadow-2xl">
+                    {/* Header */}
+                    <div className="bg-gradient-to-r from-blue-600 to-teal-500 text-white p-4 shadow-md z-10 shrink-0">
+                        <div className="flex justify-between items-center mb-2">
+                            <h1 className="text-xl font-bold flex items-center gap-2">
+                                <Icon name="Plane" /> 2026 日本自駕遊
+                            </h1>
+                            <span className="text-xs bg-white/20 px-2 py-1 rounded-full">5/9 - 5/17</span>
+                        </div>
+                        <p className="text-sm opacity-90">大阪 • 神戶 • 天橋立 • 龜岡</p>
+                    </div>
+
+                    {/* Navigation Tabs */}
+                    <div className="flex bg-white border-b shrink-0">
+                        <button 
+                            onClick={() => setActiveTab("itinerary")}
+                            className={`flex-1 py-3 text-sm font-medium flex justify-center items-center gap-2 transition-colors ${activeTab === "itinerary" ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-500 hover:text-gray-700"}`}
+                        >
+                            <Icon name="Map" size={16} /> 行程表
+                        </button>
+                        <button 
+                            onClick={() => setActiveTab("shopping")}
+                            className={`flex-1 py-3 text-sm font-medium flex justify-center items-center gap-2 transition-colors ${activeTab === "shopping" ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-500 hover:text-gray-700"}`}
+                        >
+                            <Icon name="ShoppingBag" size={16} /> 購物清單
+                        </button>
+                    </div>
+
+                    {/* Content Area */}
+                    <div className="flex-1 overflow-y-auto hide-scrollbar bg-gray-100 relative">
+                        
+                        {/* Itinerary Tab */}
+                        {activeTab === "itinerary" && (
+                            <div className="p-4 space-y-6 pb-20">
+                                {/* Date Selector (Horizontal Scroll) */}
+                                <div className="flex gap-2 overflow-x-auto pb-2 hide-scrollbar sticky top-0 z-20 -mx-4 px-4 bg-gray-100/95 backdrop-blur-sm py-2">
+                                    {tripData.map((data, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => {
+                                                setSelectedDay(index);
+                                                const el = document.getElementById(`day-${index}`);
+                                                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                            }}
+                                            className={`flex flex-col items-center justify-center min-w-[3.5rem] h-14 rounded-xl border transition-all ${
+                                                selectedDay === index 
+                                                ? "bg-blue-600 text-white border-blue-600 shadow-md scale-105" 
+                                                : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                                            }`}
+                                        >
+                                            <span className="text-[10px] font-bold">{data.date.slice(5)}</span>
+                                            <span className="text-sm font-bold">{data.day}</span>
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* Timeline Content */}
+                                <div className="space-y-8">
+                                    {tripData.map((data, index) => (
+                                        <div key={index} id={`day-${index}`} className={`scroll-mt-28 transition-opacity duration-500 ${selectedDay === index ? 'opacity-100' : 'opacity-60'}`}>
+                                            <div className="sticky top-20 z-10 mb-3">
+                                                <div className="inline-block px-3 py-1 bg-gray-800 text-white text-xs font-bold rounded-full shadow-lg">
+                                                    Day {index + 1} • {data.date} ({data.day})
+                                                </div>
+                                            </div>
+
+                                            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                                                {/* Daily Header */}
+                                                <div className="bg-gray-50 p-4 border-b border-gray-100">
+                                                    <div className="flex justify-between items-start">
+                                                        <div>
+                                                            <div className="flex items-center gap-2 text-gray-500 text-xs uppercase tracking-wider font-semibold mb-1">
+                                                                <Icon name="MapPin" size={12} />
+                                                                {data.location}
+                                                            </div>
+                                                            <div className="font-bold text-gray-800 text-lg">{data.hotel}</div>
+                                                        </div>
+                                                        {data.special && (
+                                                            <span className="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full font-bold animate-pulse">
+                                                                {data.special}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    {data.note && <div className="mt-2 text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded inline-block">{data.note}</div>}
+                                                </div>
+
+                                                {/* Timeline Events */}
+                                                <div className="p-4 relative">
+                                                    {/* Vertical Line */}
+                                                    <div className="absolute left-[1.65rem] top-4 bottom-4 w-0.5 bg-gray-200"></div>
+
+                                                    <div className="space-y-6">
+                                                        {data.highlights.map((item, i) => (
+                                                            <div key={i} className="relative pl-10">
+                                                                {/* Dot */}
+                                                                <div className={`absolute left-4 top-1.5 w-3 h-3 rounded-full border-2 border-white shadow-sm z-10 ${
+                                                                    item.type === 'flight' ? 'bg-purple-500' :
+                                                                    item.type === 'food' ? 'bg-orange-500' :
+                                                                    item.type === 'transport' ? 'bg-blue-500' :
+                                                                    'bg-teal-500'
+                                                                }`}></div>
+
+                                                                {/* Time */}
+                                                                <div className="text-xs font-mono text-gray-400 mb-0.5">{item.time}</div>
+                                                                
+                                                                {/* Content */}
+                                                                <h3 className="text-sm font-bold text-gray-800 flex items-center gap-1">
+                                                                    {item.type === 'flight' && <Icon name="Plane" size={14} className="text-purple-500"/>}
+                                                                    {item.type === 'food' && <Icon name="Utensils" size={14} className="text-orange-500"/>}
+                                                                    {item.type === 'transport' && <Icon name="Car" size={14} className="text-blue-500"/>}
+                                                                    {item.type === 'activity' && <Icon name="Camera" size={14} className="text-teal-500"/>}
+                                                                    {item.title}
+                                                                </h3>
+                                                                <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                                                                    {item.desc}
+                                                                </p>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Shopping Tab */}
+                        {activeTab === "shopping" && (
+                            <div className="p-4 space-y-6 pb-20">
+                                {/* Drugs Section */}
+                                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                                    <div className="bg-rose-50 p-3 border-b border-rose-100 flex items-center gap-2">
+                                        <div className="bg-rose-100 p-1.5 rounded-lg text-rose-600">
+                                            <Icon name="Cross" size={18} />
+                                        </div>
+                                        <h2 className="font-bold text-gray-800">藥妝店清單</h2>
+                                    </div>
+                                    <div className="divide-y divide-gray-100">
+                                        {shoppingList.drugs.map((item, i) => (
+                                            <div key={i} className="p-3 flex items-start gap-3 hover:bg-gray-50">
+                                                <div className="mt-1 text-gray-400">
+                                                    <Icon name={item.icon === "pill" ? "Circle" : item.icon === "spray" ? "Droplets" : "Package"} size={16} />
+                                                </div>
+                                                <div>
+                                                    <div className="font-bold text-gray-800 text-sm">{item.name}</div>
+                                                    <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Supermarket Section */}
+                                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                                    <div className="bg-amber-50 p-3 border-b border-amber-100 flex items-center gap-2">
+                                        <div className="bg-amber-100 p-1.5 rounded-lg text-amber-600">
+                                            <Icon name="ShoppingCart" size={18} />
+                                        </div>
+                                        <h2 className="font-bold text-gray-800">超市購物清單</h2>
+                                    </div>
+                                    <div className="divide-y divide-gray-100">
+                                        {shoppingList.supermarket.map((item, i) => (
+                                            <div key={i} className="p-3 flex items-start gap-3 hover:bg-gray-50">
+                                                <div className="mt-1">
+                                                    <span className="text-[10px] font-bold px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded border border-gray-200">
+                                                        {item.category}
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <div className="font-bold text-gray-800 text-sm">{item.name}</div>
+                                                    <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                
+                                <div className="text-center text-xs text-gray-400 mt-4">
+                                    提示：長按項目可複製 (功能開發中)
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Quick Stats Footer */}
+                    <div className="bg-white border-t p-3 text-xs text-gray-500 flex justify-between shrink-0">
+                        <div>9 天 8 夜</div>
+                        <div>大阪 / 神戶 / 天橋立</div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
