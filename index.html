@@ -44,70 +44,89 @@
     <!-- Auto-Icon Generator Script (SVG to PNG for iOS) -->
     <script>
         window.onload = function() {
-            // 定義 SVG 字串 (具象化天橋立風景 + Glass UI)
+            // 定義 SVG 字串 (寫實風景畫風格)
             const svgString = `
             <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <!-- 背景：天空到海洋的漸層 (Watercolor Style) -->
-                <linearGradient id="skySea" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#a0d8ef" /> <!-- 柔和天藍 -->
-                  <stop offset="45%" stop-color="#ffffff" /> <!-- 霧氣地平線 -->
-                  <stop offset="55%" stop-color="#89c3eb" /> <!-- 淺海藍 -->
-                  <stop offset="100%" stop-color="#2a5caa" /> <!-- 深海藍 -->
-                </linearGradient>
-                
-                <!-- 沙洲漸層 -->
-                <linearGradient id="sand" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#e6cde3" /> 
-                  <stop offset="50%" stop-color="#f6e5cc" /> <!-- 沙色 -->
-                  <stop offset="100%" stop-color="#dccbba" />
+                <!-- 1. 海洋漸層 (深邃藍) -->
+                <linearGradient id="oceanGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#0F2027" />
+                  <stop offset="50%" stop-color="#203A43" />
+                  <stop offset="100%" stop-color="#2C5364" />
                 </linearGradient>
 
-                <!-- 松樹漸層 -->
-                <linearGradient id="pine" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#69b076" /> <!-- 嫩綠 -->
-                  <stop offset="100%" stop-color="#3e7e56" /> <!-- 深綠 -->
+                <!-- 2. 天空漸層 (清澈藍) -->
+                <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#4facfe" />
+                  <stop offset="100%" stop-color="#00f2fe" />
                 </linearGradient>
 
-                <!-- 玻璃高光 -->
-                <linearGradient id="shine" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="rgba(255,255,255,0.7)" />
-                  <stop offset="40%" stop-color="rgba(255,255,255,0.15)" />
-                  <stop offset="100%" stop-color="rgba(255,255,255,0)" />
-                </linearGradient>
-                
-                <filter id="watercolorBlur">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
+                <!-- 3. 松樹紋理 (使用噪點模擬樹冠質感) -->
+                <filter id="treeTexture">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" result="noise" />
+                    <feColorMatrix type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" in="noise" result="coloredNoise" />
+                    <feComposite operator="in" in="coloredNoise" in2="SourceGraphic" result="texturedGraphic"/>
+                    <feBlend mode="multiply" in="texturedGraphic" in2="SourceGraphic" />
                 </filter>
+
+                <!-- 4. 沙灘質感 -->
+                <linearGradient id="sandGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#E6DADA" /> <!-- 淺白沙 -->
+                  <stop offset="50%" stop-color="#C9B08F" /> <!-- 金黃沙 -->
+                  <stop offset="100%" stop-color="#B09B7A" /> <!-- 濕潤沙 -->
+                </linearGradient>
+                
+                <!-- 5. 玻璃反光 -->
+                <linearGradient id="glassShine" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="rgba(255,255,255,0.6)" />
+                    <stop offset="40%" stop-color="rgba(255,255,255,0.1)" />
+                    <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+                </linearGradient>
               </defs>
 
-              <!-- 1. 背景：海天一色 -->
-              <rect width="512" height="512" fill="url(#skySea)" />
+              <!-- 背景：海天交界 -->
+              <rect width="512" height="512" fill="url(#oceanGradient)" />
+              <path d="M0 0 H 512 V 200 Q 256 220 0 200 Z" fill="url(#skyGradient)" />
 
-              <!-- 2. 遠山 (半透明水彩感) -->
-              <path d="M-50 300 Q 150 250, 250 280 T 560 240 V 512 H -50 Z" 
-                    fill="#5f89a8" opacity="0.4" style="mix-blend-mode: multiply;" />
+              <!-- 遠山剪影 -->
+              <path d="M0 200 Q 150 170 300 190 T 512 180 V 512 H 0 Z" fill="#1a2a33" opacity="0.6" />
 
-              <!-- 3. 天橋立沙洲 (S型曲線貫穿) -->
-              <!-- 沙灘基底 -->
-              <path d="M 40 480 C 120 440, 250 300, 350 150 C 380 100, 420 50, 450 30" 
-                    stroke="url(#sand)" stroke-width="50" fill="none" stroke-linecap="round" 
-                    style="filter: drop-shadow(4px 4px 10px rgba(0,50,100,0.2));" />
-                    
-              <!-- 松林上層 -->
-              <path d="M 40 480 C 120 440, 250 300, 350 150 C 380 100, 420 50, 450 30" 
-                    stroke="url(#pine)" stroke-width="24" fill="none" stroke-linecap="round" 
-                    opacity="0.9" />
+              <!-- 天橋立沙洲本體 (寫實形狀：從左下延伸至右上，分隔海域) -->
+              <!-- 1. 金色沙灘底層 (較寬) -->
+              <path d="M -20 520 
+                       C 50 450, 200 380, 280 250 
+                       S 350 100, 320 50 
+                       L 380 50
+                       C 420 100, 360 280, 340 320
+                       S 150 500, 100 540 Z" 
+                    fill="url(#sandGradient)" />
 
-              <!-- 4. 雲朵/霧氣 -->
-              <circle cx="100" cy="100" r="60" fill="white" opacity="0.3" filter="url(#watercolorBlur)" />
-              <circle cx="420" cy="180" r="90" fill="white" opacity="0.2" filter="url(#watercolorBlur)" />
+              <!-- 2. 深綠色松林 (疊加在沙灘上，較窄，帶紋理) -->
+              <path d="M 0 520 
+                       C 70 450, 210 380, 290 250 
+                       S 360 100, 335 50 
+                       L 365 50
+                       C 390 100, 330 280, 310 320
+                       S 120 500, 80 540 Z" 
+                    fill="#154734" filter="url(#treeTexture)" />
 
-              <!-- 5. Glass UI 覆蓋層 -->
-              <rect width="512" height="512" fill="url(#shine)" style="mix-blend-mode: overlay;" />
+              <!-- 海面波光細節 -->
+              <g opacity="0.3" stroke="white" stroke-width="2" fill="none">
+                  <path d="M 50 350 Q 100 360, 150 350" />
+                  <path d="M 380 420 Q 430 430, 480 420" />
+                  <path d="M 350 150 Q 400 160, 450 150" />
+                  <path d="M 100 250 Q 150 260, 200 250" />
+              </g>
+
+              <!-- 雲朵點綴 -->
+              <circle cx="100" cy="80" r="40" fill="white" opacity="0.2" filter="url(#treeTexture)" />
+              <circle cx="450" cy="120" r="60" fill="white" opacity="0.15" filter="url(#treeTexture)" />
+
+              <!-- Glass UI 頂層覆蓋 -->
+              <rect width="512" height="512" fill="url(#glassShine)" style="mix-blend-mode: overlay;" />
               
-              <!-- 6. 玻璃邊框 (增加立體感) -->
-              <rect x="8" y="8" width="496" height="496" rx="0" ry="0" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="12" />
+              <!-- 圓角邊框 (iOS App Icon 風格) -->
+              <rect x="0" y="0" width="512" height="512" rx="110" ry="110" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="8" />
             </svg>`;
 
             // 建立 Image 物件
@@ -125,6 +144,11 @@
                 canvas.width = 512;
                 canvas.height = 512;
                 const ctx = canvas.getContext('2d');
+                
+                // 繪製背景色 (避免透明背景在某些設備變黑)
+                ctx.fillStyle = "#2C5364"; 
+                ctx.fillRect(0,0,512,512);
+
                 ctx.drawImage(img, 0, 0);
                 
                 const pngUrl = canvas.toDataURL('image/png');
