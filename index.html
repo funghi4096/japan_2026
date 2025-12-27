@@ -2,7 +2,15 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- iOS Web App Settings -->
+    <meta name="apple-mobile-web-app-title" content="2026日本">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link id="apple-icon" rel="apple-touch-icon" href="">
+    <link id="favicon" rel="icon" type="image/png" href="">
+
     <title>2026/05 日本大阪天橋立之旅</title>
     
     <!-- React & ReactDOM -->
@@ -21,6 +29,8 @@
             font-family: 'Noto Sans TC', sans-serif;
             background-color: #f0f2f5;
             -webkit-font-smoothing: antialiased;
+            /* iOS Safe Area Support */
+            padding-bottom: env(safe-area-inset-bottom);
         }
         .hide-scrollbar::-webkit-scrollbar {
             display: none;
@@ -30,6 +40,61 @@
             scrollbar-width: none;
         }
     </style>
+
+    <!-- Auto-Icon Generator Script -->
+    <script>
+        window.onload = function() {
+            // 建立一個 512x512 的畫布來繪製 Icon
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+
+            // 1. 背景：白色 (日本國旗底色)
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, 512, 512);
+
+            // 2. 紅色圓形 (日之丸)
+            ctx.beginPath();
+            ctx.arc(256, 256, 180, 0, 2 * Math.PI, false);
+            ctx.fillStyle = '#bc002d'; // 日本國旗紅
+            ctx.fill();
+
+            // 3. 飛機圖示 (白色剪影)
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            // 繪製一個簡單的飛機形狀
+            ctx.moveTo(256, 130);
+            ctx.lineTo(290, 220);
+            ctx.lineTo(380, 250); // 右翼尖
+            ctx.lineTo(290, 280);
+            ctx.lineTo(290, 350);
+            ctx.lineTo(330, 390); // 尾翼右
+            ctx.lineTo(256, 380); // 尾端
+            ctx.lineTo(182, 390); // 尾翼左
+            ctx.lineTo(222, 350);
+            ctx.lineTo(222, 280);
+            ctx.lineTo(132, 250); // 左翼尖
+            ctx.lineTo(222, 220);
+            ctx.closePath();
+            ctx.fill();
+
+            // 4. 文字 "2026" (選用，為了辨識度，這裡用簡潔的飛機就好，若要加文字可取消註解)
+            /*
+            ctx.font = 'bold 80px Arial';
+            ctx.fillStyle = '#333';
+            ctx.textAlign = 'center';
+            ctx.fillText('2026', 256, 450);
+            */
+
+            // 轉換為 Data URL
+            const iconUrl = canvas.toDataURL('image/png');
+
+            // 設定給 iOS 和瀏覽器
+            document.getElementById('apple-icon').href = iconUrl;
+            document.getElementById('favicon').href = iconUrl;
+        };
+    </script>
 </head>
 <body>
     <div id="root"></div>
@@ -37,7 +102,7 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- 內建 SVG 圖示 (修正：使用 <g> 包覆多個路徑) ---
+        // --- 內建 SVG 圖示 (修正版：確保所有多路徑圖示都用 <g> 包覆) ---
         const ICONS = {
             Plane: <path d="M2 12h20M13 2l9 10-9 10m-6-10 9-10-9 10Z" />,
             PlaneUp: <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />,
@@ -75,7 +140,6 @@
             );
         };
 
-        // --- 行程資料 ---
         const tripData = [
             {
                 date: "2026/05/09",
@@ -214,8 +278,11 @@
 
             return (
                 <div className="max-w-md mx-auto h-screen bg-gray-50 flex flex-col overflow-hidden shadow-2xl font-sans">
+                    {/* iOS Status Bar Spacer */}
+                    <div className="h-0 md:h-0 w-full bg-blue-600"></div>
+
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-blue-600 to-teal-500 text-white p-4 shadow-md z-10 shrink-0">
+                    <div className="bg-gradient-to-r from-blue-600 to-teal-500 text-white p-4 shadow-md z-10 shrink-0 pt-safe-top">
                         <div className="flex justify-between items-center mb-2">
                             <h1 className="text-xl font-bold flex items-center gap-2">
                                 <Icon name="PlaneUp" /> 2026 日本自駕遊
@@ -399,7 +466,7 @@
                     </div>
 
                     {/* Quick Stats Footer */}
-                    <div className="bg-white border-t p-3 text-xs text-gray-500 flex justify-between shrink-0">
+                    <div className="bg-white border-t p-3 text-xs text-gray-500 flex justify-between shrink-0 pb-safe-bottom">
                         <div>9 天 8 夜</div>
                         <div>大阪 / 神戶 / 天橋立</div>
                     </div>
