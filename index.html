@@ -14,9 +14,6 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
@@ -40,7 +37,45 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // Data Structure based on user's file
+        // --- 內建 SVG 圖示 (修正：使用 <g> 包覆多個路徑) ---
+        const ICONS = {
+            Plane: <path d="M2 12h20M13 2l9 10-9 10m-6-10 9-10-9 10Z" />,
+            PlaneUp: <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />,
+            Map: <path d="M1 6v14a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H3a2 2 0 0 0-2 2zm18 0l-6 6l-6-6" />, 
+            ShoppingBag: <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0" />,
+            MapPin: <g><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></g>,
+            Utensils: <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7" />,
+            Car: <g><path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12a6 6 0 0 0 6 6h7a6 6 0 0 0 3-5.29z" /><circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></g>,
+            Camera: <g><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></g>,
+            ShoppingCart: <g><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></g>,
+            Cross: <path d="M12 2v20M2 12h20" />,
+            Pill: <g><rect width="16" height="6" x="4" y="9" rx="3" ry="3" /><path d="M8 9v6" /></g>,
+            Droplets: <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z" />,
+            Package: <path d="M16.5 9.4 7.5 4.21M21 16v-7.5L12 3 3 8.5V16l9 5.5 9-5.5M12 21.5V12M12 12 3 8.5M12 12l9-3.5" />,
+            ChevronRight: <path d="M9 18l6-6-6-6" />,
+        };
+
+        const Icon = ({ name, size = 18, className = "" }) => {
+            const content = ICONS[name] || <circle cx="12" cy="12" r="10" />;
+            return (
+                <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width={size} 
+                    height={size} 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    className={className}
+                >
+                    {content}
+                </svg>
+            );
+        };
+
+        // --- 行程資料 ---
         const tripData = [
             {
                 date: "2026/05/09",
@@ -152,10 +187,10 @@
 
         const shoppingList = {
             drugs: [
-                { name: "傳明酸 (Pelack T)", desc: "喉嚨紅腫、爆痛、發燒前兆", icon: "pill" },
-                { name: "LULU 噴霧", desc: "液體較濃稠，適合喉嚨發炎", icon: "spray" },
-                { name: "Chocola 噴霧", desc: "含 CPC 殺菌，主攻嘴破(口內炎)", icon: "spray" },
-                { name: "龍角散", desc: "喉嚨癢、卡痰、咳嗽 (粉/喉糖)", icon: "package" },
+                { name: "傳明酸 (Pelack T)", desc: "喉嚨紅腫、爆痛、發燒前兆", icon: "Pill" },
+                { name: "LULU 噴霧", desc: "液體較濃稠，適合喉嚨發炎", icon: "Droplets" },
+                { name: "Chocola 噴霧", desc: "含 CPC 殺菌，主攻嘴破(口內炎)", icon: "Droplets" },
+                { name: "龍角散", desc: "喉嚨癢、卡痰、咳嗽 (粉/喉糖)", icon: "Package" },
             ],
             supermarket: [
                 { name: "S&B 吐司抹醬", desc: "菠蘿、巧克力、披薩口味 (塗抹後烤)", category: "調味" },
@@ -173,49 +208,17 @@
             ]
         };
 
-        const Icon = ({ name, size = 18, className = "" }) => {
-            const lucideIcons = window.lucide;
-            if (!lucideIcons) return null;
-            
-            const IconComponent = lucideIcons.icons[name];
-            if (!IconComponent) return null;
-
-            // Convert kebab-case props to camelCase manually for React
-            return (
-                <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    width={size} 
-                    height={size} 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    className={className}
-                    dangerouslySetInnerHTML={{ __html: IconComponent.toSvg().match(/>(.*)<\/svg>/)[1] }}
-                />
-            );
-        };
-
         const App = () => {
             const [activeTab, setActiveTab] = useState("itinerary");
             const [selectedDay, setSelectedDay] = useState(0);
 
-            // Trigger lucide icon replacement on mount and updates
-            useEffect(() => {
-                if (window.lucide) {
-                    window.lucide.createIcons();
-                }
-            });
-
             return (
-                <div className="max-w-md mx-auto h-screen bg-gray-50 flex flex-col overflow-hidden shadow-2xl">
+                <div className="max-w-md mx-auto h-screen bg-gray-50 flex flex-col overflow-hidden shadow-2xl font-sans">
                     {/* Header */}
                     <div className="bg-gradient-to-r from-blue-600 to-teal-500 text-white p-4 shadow-md z-10 shrink-0">
                         <div className="flex justify-between items-center mb-2">
                             <h1 className="text-xl font-bold flex items-center gap-2">
-                                <Icon name="Plane" /> 2026 日本自駕遊
+                                <Icon name="PlaneUp" /> 2026 日本自駕遊
                             </h1>
                             <span className="text-xs bg-white/20 px-2 py-1 rounded-full">5/9 - 5/17</span>
                         </div>
@@ -317,7 +320,7 @@
                                                                 
                                                                 {/* Content */}
                                                                 <h3 className="text-sm font-bold text-gray-800 flex items-center gap-1">
-                                                                    {item.type === 'flight' && <Icon name="Plane" size={14} className="text-purple-500"/>}
+                                                                    {item.type === 'flight' && <Icon name="PlaneUp" size={14} className="text-purple-500"/>}
                                                                     {item.type === 'food' && <Icon name="Utensils" size={14} className="text-orange-500"/>}
                                                                     {item.type === 'transport' && <Icon name="Car" size={14} className="text-blue-500"/>}
                                                                     {item.type === 'activity' && <Icon name="Camera" size={14} className="text-teal-500"/>}
@@ -352,7 +355,7 @@
                                         {shoppingList.drugs.map((item, i) => (
                                             <div key={i} className="p-3 flex items-start gap-3 hover:bg-gray-50">
                                                 <div className="mt-1 text-gray-400">
-                                                    <Icon name={item.icon === "pill" ? "Circle" : item.icon === "spray" ? "Droplets" : "Package"} size={16} />
+                                                    <Icon name={item.icon} size={16} />
                                                 </div>
                                                 <div>
                                                     <div className="font-bold text-gray-800 text-sm">{item.name}</div>
