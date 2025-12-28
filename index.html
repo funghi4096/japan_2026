@@ -8,8 +8,10 @@
     <meta name="apple-mobile-web-app-title" content="2026日本">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link id="apple-icon" rel="apple-touch-icon" href="">
-    <link id="favicon" rel="icon" type="image/png" href="">
+    
+    <!-- Static Icons (Path relative to japan_2026/index.html) -->
+    <link rel="apple-touch-icon" href="png_files/icon.png">
+    <link rel="icon" type="image/png" href="png_files/icon.png">
 
     <title>2026/05 日本大阪天橋立之旅</title>
     
@@ -45,79 +47,6 @@
             background-color: #e5e7eb;
         }
     </style>
-
-    <!-- Auto-Icon Generator Script (SVG to PNG for iOS) -->
-    <script>
-        window.onload = function() {
-            // 定義 SVG 字串 (寫實風景畫風格 - 天橋立)
-            const svgString = `
-            <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#6DD5FA" />
-                  <stop offset="100%" stop-color="#2980B9" />
-                </linearGradient>
-                <linearGradient id="seaOuter" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#006994" />
-                  <stop offset="100%" stop-color="#004e92" />
-                </linearGradient>
-                <linearGradient id="seaInner" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#4ca1af" />
-                  <stop offset="100%" stop-color="#2c3e50" />
-                </linearGradient>
-                <linearGradient id="sand" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#EAD1B1" />
-                  <stop offset="50%" stop-color="#D4B48C" />
-                  <stop offset="100%" stop-color="#C2A479" />
-                </linearGradient>
-                <linearGradient id="pine" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#2F5D33" />
-                  <stop offset="50%" stop-color="#1E3E22" />
-                  <stop offset="100%" stop-color="#0D1F0E" />
-                </linearGradient>
-              </defs>
-              <clipPath id="roundCorners">
-                <rect width="512" height="512" rx="110" ry="110" />
-              </clipPath>
-              <g clip-path="url(#roundCorners)">
-                  <rect width="512" height="200" fill="url(#sky)" />
-                  <path d="M 50 80 Q 70 60 100 70 Q 120 50 150 60 Q 180 40 210 70 Q 230 80 210 100 Q 180 120 150 100 Q 120 110 90 90 Q 70 100 50 80 Z" fill="#FFFFFF" opacity="0.7" />
-                  <path d="M 350 120 Q 370 100 400 110 Q 420 90 450 100 Q 480 80 510 110 Q 530 120 510 140 Q 480 160 450 140 Q 420 150 390 130 Q 370 140 350 120 Z" fill="#FFFFFF" opacity="0.6" />
-                  <rect y="200" width="512" height="312" fill="url(#seaOuter)" />
-                  <path d="M 0 200 L 0 512 L 512 512 L 512 200 Q 400 220 300 350 Q 250 420 200 512 L 0 512 Z" fill="url(#seaInner)" opacity="0.6" />
-                  <path d="M 0 200 Q 80 170 160 190 Q 240 150 320 180 Q 400 160 480 190 L 512 200 L 512 220 L 0 220 Z" fill="#5E7D7E" />
-                  <path d="M 0 210 Q 100 190 200 205 Q 300 180 400 200 Q 450 190 512 205 L 512 220 L 0 220 Z" fill="#3E5D5E" opacity="0.8" />
-                  <path d="M -10 522 C 40 450, 180 380, 280 250 S 370 100, 350 40 L 420 40 C 460 100, 400 280, 360 330 S 160 500, 110 552 Z" fill="url(#sand)" />
-                  <path d="M 20 522 C 60 460, 190 390, 290 260 C 320 220, 340 180, 360 140 C 365 130, 370 120, 375 110 C 380 100, 385 90, 388 80 L 395 80 C 398 90, 402 100, 405 110 C 410 120, 415 130, 418 140 C 430 180, 410 230, 390 280 C 350 380, 220 480, 160 552 Z" fill="url(#pine)" stroke="#1E3E22" stroke-width="2" stroke-linejoin="round" />
-                  <g fill="#FFFFFF">
-                      <path d="M 100 300 L 110 305 L 100 310 Z" />
-                      <path d="M 400 400 L 415 405 L 400 410 Z" />
-                  </g>
-              </g>
-              <rect x="1" y="1" width="510" height="510" rx="110" ry="110" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="2" />
-            </svg>`;
-
-            const img = new Image();
-            const svg64 = btoa(unescape(encodeURIComponent(svgString)));
-            const b64Start = 'data:image/svg+xml;base64,';
-            const image64 = b64Start + svg64;
-            
-            img.src = image64;
-
-            img.onload = function() {
-                const canvas = document.createElement('canvas');
-                canvas.width = 512;
-                canvas.height = 512;
-                const ctx = canvas.getContext('2d');
-                ctx.fillStyle = "#2C5364"; 
-                ctx.fillRect(0,0,512,512);
-                ctx.drawImage(img, 0, 0);
-                const pngUrl = canvas.toDataURL('image/png');
-                document.getElementById('apple-icon').href = pngUrl;
-                document.getElementById('favicon').href = pngUrl;
-            };
-        };
-    </script>
 </head>
 <body>
     <div id="root"></div>
