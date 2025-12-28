@@ -39,6 +39,11 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+        /* Custom Button Active State */
+        .btn-press:active {
+            transform: scale(0.95);
+            background-color: #e5e7eb;
+        }
     </style>
 
     <!-- Auto-Icon Generator Script (SVG to PNG for iOS) -->
@@ -48,75 +53,51 @@
             const svgString = `
             <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <!-- 天空漸層 -->
                 <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
                   <stop offset="0%" stop-color="#6DD5FA" />
                   <stop offset="100%" stop-color="#2980B9" />
                 </linearGradient>
-                <!-- 外海漸層 (宮津灣) -->
                 <linearGradient id="seaOuter" x1="0%" y1="0%" x2="0%" y2="100%">
                   <stop offset="0%" stop-color="#006994" />
                   <stop offset="100%" stop-color="#004e92" />
                 </linearGradient>
-                <!-- 內海漸層 (阿蘇海) -->
                 <linearGradient id="seaInner" x1="0%" y1="0%" x2="0%" y2="100%">
                   <stop offset="0%" stop-color="#4ca1af" />
                   <stop offset="100%" stop-color="#2c3e50" />
                 </linearGradient>
-                <!-- 沙灘漸層 -->
                 <linearGradient id="sand" x1="0%" y1="0%" x2="0%" y2="100%">
                   <stop offset="0%" stop-color="#EAD1B1" />
                   <stop offset="50%" stop-color="#D4B48C" />
                   <stop offset="100%" stop-color="#C2A479" />
                 </linearGradient>
-                <!-- 松林漸層 -->
                 <linearGradient id="pine" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#2F5D33" />
                   <stop offset="50%" stop-color="#1E3E22" />
                   <stop offset="100%" stop-color="#0D1F0E" />
                 </linearGradient>
               </defs>
-
-              <!-- iOS 圓角剪裁 -->
               <clipPath id="roundCorners">
                 <rect width="512" height="512" rx="110" ry="110" />
               </clipPath>
-
-              <!-- 主畫面群組 -->
               <g clip-path="url(#roundCorners)">
-                  <!-- 天空 -->
                   <rect width="512" height="200" fill="url(#sky)" />
-                  <!-- 雲朵 -->
                   <path d="M 50 80 Q 70 60 100 70 Q 120 50 150 60 Q 180 40 210 70 Q 230 80 210 100 Q 180 120 150 100 Q 120 110 90 90 Q 70 100 50 80 Z" fill="#FFFFFF" opacity="0.7" />
                   <path d="M 350 120 Q 370 100 400 110 Q 420 90 450 100 Q 480 80 510 110 Q 530 120 510 140 Q 480 160 450 140 Q 420 150 390 130 Q 370 140 350 120 Z" fill="#FFFFFF" opacity="0.6" />
-
-                  <!-- 海洋 (外海) -->
                   <rect y="200" width="512" height="312" fill="url(#seaOuter)" />
-                  <!-- 海洋 (內海) -->
                   <path d="M 0 200 L 0 512 L 512 512 L 512 200 Q 400 220 300 350 Q 250 420 200 512 L 0 512 Z" fill="url(#seaInner)" opacity="0.6" />
-
-                  <!-- 遠山 -->
                   <path d="M 0 200 Q 80 170 160 190 Q 240 150 320 180 Q 400 160 480 190 L 512 200 L 512 220 L 0 220 Z" fill="#5E7D7E" />
                   <path d="M 0 210 Q 100 190 200 205 Q 300 180 400 200 Q 450 190 512 205 L 512 220 L 0 220 Z" fill="#3E5D5E" opacity="0.8" />
-
-                  <!-- 天橋立沙洲 (沙灘層) -->
                   <path d="M -10 522 C 40 450, 180 380, 280 250 S 370 100, 350 40 L 420 40 C 460 100, 400 280, 360 330 S 160 500, 110 552 Z" fill="url(#sand)" />
-                  <!-- 天橋立沙洲 (松林層) -->
                   <path d="M 20 522 C 60 460, 190 390, 290 260 C 320 220, 340 180, 360 140 C 365 130, 370 120, 375 110 C 380 100, 385 90, 388 80 L 395 80 C 398 90, 402 100, 405 110 C 410 120, 415 130, 418 140 C 430 180, 410 230, 390 280 C 350 380, 220 480, 160 552 Z" fill="url(#pine)" stroke="#1E3E22" stroke-width="2" stroke-linejoin="round" />
-
-                  <!-- 點綴小船 -->
                   <g fill="#FFFFFF">
                       <path d="M 100 300 L 110 305 L 100 310 Z" />
                       <path d="M 400 400 L 415 405 L 400 410 Z" />
                   </g>
               </g>
-              <!-- Icon 邊框 -->
               <rect x="1" y="1" width="510" height="510" rx="110" ry="110" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="2" />
             </svg>`;
 
-            // 建立 Image 物件
             const img = new Image();
-            // 將 SVG 轉為 Base64
             const svg64 = btoa(unescape(encodeURIComponent(svgString)));
             const b64Start = 'data:image/svg+xml;base64,';
             const image64 = b64Start + svg64;
@@ -124,21 +105,14 @@
             img.src = image64;
 
             img.onload = function() {
-                // 繪製到 Canvas 並轉為 PNG (確保 iOS 相容性)
                 const canvas = document.createElement('canvas');
                 canvas.width = 512;
                 canvas.height = 512;
                 const ctx = canvas.getContext('2d');
-                
-                // 繪製背景色 (避免透明背景在某些設備變黑)
                 ctx.fillStyle = "#2C5364"; 
                 ctx.fillRect(0,0,512,512);
-
                 ctx.drawImage(img, 0, 0);
-                
                 const pngUrl = canvas.toDataURL('image/png');
-                
-                // 設定 Icon
                 document.getElementById('apple-icon').href = pngUrl;
                 document.getElementById('favicon').href = pngUrl;
             };
@@ -151,7 +125,7 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- 內建 SVG 圖示 (修正版：確保所有多路徑圖示都用 <g> 包覆) ---
+        // --- ICONS ---
         const ICONS = {
             Plane: <path d="M2 12h20M13 2l9 10-9 10m-6-10 9-10-9 10Z" />,
             PlaneUp: <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />,
@@ -167,39 +141,31 @@
             Droplets: <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z" />,
             Package: <path d="M16.5 9.4 7.5 4.21M21 16v-7.5L12 3 3 8.5V16l9 5.5 9-5.5M12 21.5V12M12 12 3 8.5M12 12l9-3.5" />,
             ChevronRight: <path d="M9 18l6-6-6-6" />,
+            Phone: <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />,
+            Copy: <g><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></g>
         };
 
         const Icon = ({ name, size = 18, className = "" }) => {
             const content = ICONS[name] || <circle cx="12" cy="12" r="10" />;
             return (
-                <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    width={size} 
-                    height={size} 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    className={className}
-                >
-                    {content}
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{content}</svg>
             );
         };
 
+        // --- Trip Data with Fixed Links (Google Maps Query) ---
         const tripData = [
             {
                 date: "2026/05/09",
                 day: "六",
                 location: "神戶",
                 hotel: "Comfort Hotel Kobe Sannomiya",
+                hotelPhone: "078-271-3611",
+                hotelLink: "https://www.google.com/maps/search/?api=1&query=Comfort+Hotel+Kobe+Sannomiya",
                 highlights: [
                     { time: "10:15", type: "flight", title: "星宇航空 JR822 出發", desc: "台北 TPE ➔ 關西 KIX (14:00 抵達)" },
-                    { time: "14:30", type: "transport", title: "關西機場租車", desc: "預計直接租車前往神戶" },
+                    { time: "14:30", type: "transport", title: "關西機場租車", desc: "預計直接租車前往神戶", phone: "072-456-8600", mapLink: "https://www.google.com/maps/search/?api=1&query=Kansai+Airport+Car+Rental" }, 
                     { time: "16:00", type: "transport", title: "前往神戶", desc: "車程約 1~1.5 小時" },
-                    { time: "18:00", type: "activity", title: "神戶三宮周邊", desc: "辦理入住，周邊簡單晚餐或逛街" }
+                    { time: "18:00", type: "activity", title: "神戶三宮周邊", desc: "辦理入住，周邊簡單晚餐或逛街", phone: "078-271-3611", mapLink: "https://www.google.com/maps/search/?api=1&query=Kobe+Sannomiya+Station" }
                 ]
             },
             {
@@ -207,12 +173,14 @@
                 day: "日",
                 location: "神戶",
                 hotel: "Comfort Hotel Kobe Sannomiya",
+                hotelPhone: "078-271-3611",
+                hotelLink: "https://www.google.com/maps/search/?api=1&query=Comfort+Hotel+Kobe+Sannomiya",
                 special: "🎂 JOEY 生日",
                 highlights: [
-                    { time: "10:00", type: "activity", title: "北野異人館街 (建議)", desc: "參觀風見雞之館、萌黃之館，感受異國風情" },
-                    { time: "13:00", type: "food", title: "神戶牛排午餐 (慶生)", desc: "慶祝 JOEY 生日，預約知名鐵板燒" },
-                    { time: "15:30", type: "activity", title: "美利堅公園 & 神戶港", desc: "神戶地標塔、BE KOBE 標誌拍照" },
-                    { time: "19:00", type: "activity", title: "摩耶山 掬星台 (建議)", desc: "日本三大夜景之一 (視體力決定)" }
+                    { time: "10:00", type: "activity", title: "北野異人館街", desc: "風見雞之館 (建議)", phone: "078-242-3223", mapLink: "https://www.google.com/maps/search/?api=1&query=Kitano+Ijinkan-gai" },
+                    { time: "13:00", type: "food", title: "神戶牛排午餐 (慶生)", desc: "Mouriya (モーリヤ) 需預約", phone: "078-391-4603", mapLink: "https://www.google.com/maps/search/?api=1&query=Mouriya+Sannomiya+Steak" },
+                    { time: "15:30", type: "activity", title: "美利堅公園 & 神戶港", desc: "BE KOBE 標誌", phone: "078-304-2500", mapLink: "https://www.google.com/maps/search/?api=1&query=Meriken+Park+Kobe" },
+                    { time: "19:00", type: "activity", title: "摩耶山 掬星台", desc: "日本三大夜景", phone: "078-861-2998", mapLink: "https://www.google.com/maps/search/?api=1&query=Kikuseidai+Observation+Platform" }
                 ]
             },
             {
@@ -220,11 +188,13 @@
                 day: "一",
                 location: "伊根/天橋立",
                 hotel: "神風樓 (含早晚餐)",
+                hotelPhone: "0772-27-0007",
+                hotelLink: "https://www.google.com/maps/search/?api=1&query=Ine+Shinpuro",
                 note: "房價 JPY 132,900 (兩晚)",
                 highlights: [
                     { time: "09:30", type: "transport", title: "前往伊根", desc: "自駕前往海之京都 (車程約 2 小時)" },
-                    { time: "12:00", type: "food", title: "舞鶴海鮮市場 (建議中途)", desc: "享用新鮮海鮮丼飯" },
-                    { time: "14:30", type: "activity", title: "伊根舟屋群", desc: "入住神風樓，漫步舟屋街道，欣賞獨特水上家屋" },
+                    { time: "12:00", type: "food", title: "舞鶴海鮮市場", desc: "Toretore Center 新鮮海鮮", phone: "0773-75-6125", mapLink: "https://www.google.com/maps/search/?api=1&query=Maizuru+Port+Toretore+Center" },
+                    { time: "14:30", type: "activity", title: "伊根舟屋群", desc: "伊根町觀光協會", phone: "0772-32-0277", mapLink: "https://www.google.com/maps/search/?api=1&query=Ine+no+Funaya" },
                     { time: "18:00", type: "food", title: "飯店晚餐", desc: "享用神風樓精緻料理" }
                 ]
             },
@@ -233,11 +203,13 @@
                 day: "二",
                 location: "伊根/天橋立",
                 hotel: "神風樓",
+                hotelPhone: "0772-27-0007",
+                hotelLink: "https://www.google.com/maps/search/?api=1&query=Ine+Shinpuro",
                 highlights: [
-                    { time: "09:00", type: "activity", title: "伊根灣遊覽船", desc: "搭船餵食海鷗，從海上看舟屋" },
-                    { time: "11:30", type: "activity", title: "天橋立 View Land", desc: "搭乘纜車/單軌電車，從飛龍觀看天橋立" },
-                    { time: "14:00", type: "activity", title: "智恩寺 & 迴旋橋", desc: "參拜文殊菩薩，觀看船過橋開的景象" },
-                    { time: "15:30", type: "activity", title: "元伊勢 籠神社 (建議)", desc: "丹後國一宮，歷史悠久的神社" }
+                    { time: "09:00", type: "activity", title: "伊根灣遊覽船", desc: "日出車站搭乘", phone: "0772-32-0009", mapLink: "https://www.google.com/maps/search/?api=1&query=Ine+Bay+Sightseeing+Boat" },
+                    { time: "11:30", type: "activity", title: "天橋立 View Land", desc: "飛龍觀纜車", phone: "0772-22-1000", mapLink: "https://www.google.com/maps/search/?api=1&query=Amanohashidate+View+Land" },
+                    { time: "14:00", type: "activity", title: "智恩寺 & 迴旋橋", desc: "參拜文殊菩薩", phone: "0772-22-2553", mapLink: "https://www.google.com/maps/search/?api=1&query=Chionji+Temple+Amanohashidate" },
+                    { time: "15:30", type: "activity", title: "元伊勢 籠神社", desc: "丹後國一宮", phone: "0772-27-0006", mapLink: "https://www.google.com/maps/search/?api=1&query=Motoise+Kono+Shrine" }
                 ]
             },
             {
@@ -245,10 +217,12 @@
                 day: "三",
                 location: "龜岡市",
                 hotel: "龜岡市住宿 (未定)",
+                hotelPhone: "0771-22-3131", // 龜岡市政府代用
+                hotelLink: "https://www.google.com/maps/search/?api=1&query=Kameoka+Station",
                 highlights: [
                     { time: "10:00", type: "transport", title: "前往龜岡", desc: "往南移動，接近京都市區外圍" },
-                    { time: "13:00", type: "activity", title: "保津川遊船 (建議)", desc: "體驗刺激的溪流泛舟 (龜岡出發)" },
-                    { time: "15:30", type: "activity", title: "出雲大神宮 (建議)", desc: "丹波國一宮，以結緣聞名" }
+                    { time: "13:00", type: "activity", title: "保津川遊船", desc: "龜岡乘船場", phone: "0771-22-5846", mapLink: "https://www.google.com/maps/search/?api=1&query=Hozugawa+River+Boat+Ride" },
+                    { time: "15:30", type: "activity", title: "出雲大神宮", desc: "丹波國一宮", phone: "0771-24-7799", mapLink: "https://www.google.com/maps/search/?api=1&query=Izumo+Daijingu" }
                 ]
             },
             {
@@ -256,10 +230,12 @@
                 day: "四",
                 location: "龜岡市",
                 hotel: "龜岡市住宿 (未定)",
+                hotelPhone: "0771-22-3131",
+                hotelLink: "https://www.google.com/maps/search/?api=1&query=Kameoka+Station",
                 highlights: [
-                    { time: "09:30", type: "activity", title: "嵯峨野觀光小火車 (建議)", desc: "龜岡站搭乘，前往嵐山方向遊覽" },
-                    { time: "11:00", type: "activity", title: "嵐山半日遊 (建議)", desc: "渡月橋、竹林之道 (距離龜岡很近)" },
-                    { time: "16:00", type: "activity", title: "湯之花溫泉鄉 (建議)", desc: "若住宿在此，享受溫泉放鬆" }
+                    { time: "09:30", type: "activity", title: "嵯峨野觀光小火車", desc: "小火車龜岡站", phone: "0771-22-6001", mapLink: "https://www.google.com/maps/search/?api=1&query=Sagano+Scenic+Railway+Kameoka+Station" },
+                    { time: "11:00", type: "activity", title: "嵐山半日遊", desc: "渡月橋、竹林 (建議搭JR或小火車前往)" },
+                    { time: "16:00", type: "activity", title: "湯之花溫泉鄉", desc: "建議參訪 翠泉 等旅館", phone: "0771-22-7575", mapLink: "https://www.google.com/maps/search/?api=1&query=Yunohana+Onsen" }
                 ]
             },
             {
@@ -267,12 +243,14 @@
                 day: "五",
                 location: "臨空城",
                 hotel: "Odysis Suite Osaka",
+                hotelPhone: "072-458-0018",
+                hotelLink: "https://www.google.com/maps/search/?api=1&query=Odysis+Suites+Osaka+Airport+Hotel",
                 note: "大阪奧迪西斯套房飯店",
                 highlights: [
                     { time: "10:00", type: "transport", title: "前往臨空城/泉佐野", desc: "往關西機場方向移動" },
-                    { time: "12:30", type: "activity", title: "堺市 (Sakai) 觀光 (建議)", desc: "仁德天皇陵古墳、利休之杜 (距離臨空城30分)" },
-                    { time: "16:00", type: "activity", title: "Rinku Premium Outlets", desc: "飯店附近，大型 Outlet 購物" },
-                    { time: "19:00", type: "food", title: "臨空城晚餐", desc: "Outlet 或 Seacle 購物中心用餐" }
+                    { time: "12:30", type: "activity", title: "堺市 (Sakai) 觀光", desc: "仁德天皇陵古墳", phone: "072-241-0002", mapLink: "https://www.google.com/maps/search/?api=1&query=Daisen+Park" },
+                    { time: "16:00", type: "activity", title: "Rinku Premium Outlets", desc: "大型 Outlet 購物", phone: "072-458-4600", mapLink: "https://www.google.com/maps/search/?api=1&query=Rinku+Premium+Outlets" },
+                    { time: "19:00", type: "food", title: "臨空城晚餐", desc: "Seacle 購物中心等" }
                 ]
             },
             {
@@ -280,10 +258,12 @@
                 day: "六",
                 location: "臨空城",
                 hotel: "Odysis Suite Osaka",
+                hotelPhone: "072-458-0018",
+                hotelLink: "https://www.google.com/maps/search/?api=1&query=Odysis+Suites+Osaka+Airport+Hotel",
                 highlights: [
-                    { time: "10:00", type: "activity", title: "臨空公園", desc: "早晨散步，欣賞海景與飛機起降" },
-                    { time: "13:00", type: "activity", title: "AEON MALL 臨空泉南 (建議)", desc: "最後的大型超市補貨、藥妝採買" },
-                    { time: "16:00", type: "activity", title: "整理行李", desc: "打包戰利品，準備隔日返台" }
+                    { time: "10:00", type: "activity", title: "臨空公園", desc: "散步、看海", phone: "072-469-7717", mapLink: "https://www.google.com/maps/search/?api=1&query=Rinku+Park" },
+                    { time: "13:00", type: "activity", title: "AEON MALL 臨空泉南", desc: "超市補貨", phone: "072-480-6000", mapLink: "https://www.google.com/maps/search/?api=1&query=Aeon+Mall+Rinku+Sennan" },
+                    { time: "16:00", type: "activity", title: "整理行李", desc: "打包戰利品" }
                 ]
             },
             {
@@ -292,7 +272,7 @@
                 location: "HOME",
                 hotel: "溫暖的家",
                 highlights: [
-                    { time: "10:00", type: "transport", title: "前往關西機場", desc: "還車，辦理登機手續" },
+                    { time: "10:00", type: "transport", title: "前往關西機場", desc: "還車，辦理登機", phone: "072-455-2500", mapLink: "https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport" },
                     { time: "13:25", type: "flight", title: "星宇航空 JR821 起飛", desc: "KIX ➔ TPE (15:20 抵達)" }
                 ]
             }
@@ -324,6 +304,21 @@
         const App = () => {
             const [activeTab, setActiveTab] = useState("itinerary");
             const [selectedDay, setSelectedDay] = useState(0);
+
+            // Copy to clipboard function
+            const copyToClipboard = (text) => {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text);
+                } else {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                }
+                alert(`已複製: ${text}`); 
+            };
 
             return (
                 <div className="max-w-md mx-auto h-screen bg-gray-50 flex flex-col overflow-hidden shadow-2xl font-sans">
@@ -363,7 +358,7 @@
                         {/* Itinerary Tab */}
                         {activeTab === "itinerary" && (
                             <div className="p-4 space-y-6 pb-20">
-                                {/* Date Selector (Horizontal Scroll) */}
+                                {/* Date Selector */}
                                 <div className="flex gap-2 overflow-x-auto pb-2 hide-scrollbar sticky top-0 z-20 -mx-4 px-4 bg-gray-100/95 backdrop-blur-sm py-2">
                                     {tripData.map((data, index) => (
                                         <button
@@ -396,7 +391,7 @@
                                             </div>
 
                                             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                                                {/* Daily Header */}
+                                                {/* Daily Header (Hotel Info) */}
                                                 <div className="bg-gray-50 p-4 border-b border-gray-100">
                                                     <div className="flex justify-between items-start">
                                                         <div>
@@ -404,14 +399,34 @@
                                                                 <Icon name="MapPin" size={12} />
                                                                 {data.location}
                                                             </div>
-                                                            <div className="font-bold text-gray-800 text-lg">{data.hotel}</div>
+                                                            <div className="font-bold text-gray-800 text-lg leading-tight">{data.hotel}</div>
                                                         </div>
                                                         {data.special && (
-                                                            <span className="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full font-bold animate-pulse">
+                                                            <span className="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full font-bold animate-pulse whitespace-nowrap ml-2">
                                                                 {data.special}
                                                             </span>
                                                         )}
                                                     </div>
+                                                    
+                                                    {/* Hotel Actions */}
+                                                    {data.hotelPhone && (
+                                                        <div className="flex gap-2 mt-3">
+                                                            <button 
+                                                                onClick={() => copyToClipboard(data.hotelPhone)}
+                                                                className="flex-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 py-1.5 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 btn-press transition-all"
+                                                            >
+                                                                <Icon name="Phone" size={12} /> {data.hotelPhone}
+                                                            </button>
+                                                            <a 
+                                                                href={data.hotelLink} 
+                                                                target="_blank"
+                                                                className="flex-1 bg-blue-50 border border-blue-200 hover:bg-blue-100 text-blue-700 py-1.5 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 btn-press transition-all"
+                                                            >
+                                                                <Icon name="Map" size={12} /> 導航
+                                                            </a>
+                                                        </div>
+                                                    )}
+                                                    
                                                     {data.note && <div className="mt-2 text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded inline-block">{data.note}</div>}
                                                 </div>
 
@@ -434,7 +449,7 @@
                                                                 {/* Time */}
                                                                 <div className="text-xs font-mono text-gray-400 mb-0.5">{item.time}</div>
                                                                 
-                                                                {/* Content */}
+                                                                {/* Title */}
                                                                 <h3 className="text-sm font-bold text-gray-800 flex items-center gap-1">
                                                                     {item.type === 'flight' && <Icon name="PlaneUp" size={14} className="text-purple-500"/>}
                                                                     {item.type === 'food' && <Icon name="Utensils" size={14} className="text-orange-500"/>}
@@ -445,6 +460,27 @@
                                                                 <p className="text-xs text-gray-500 mt-1 leading-relaxed">
                                                                     {item.desc}
                                                                 </p>
+
+                                                                {/* Navigation Buttons for Spot */}
+                                                                {(item.phone || item.mapLink) && (
+                                                                    <div className="flex gap-2 mt-2">
+                                                                        {item.phone && (
+                                                                            <button 
+                                                                                onClick={() => copyToClipboard(item.phone)}
+                                                                                className="bg-gray-100 hover:bg-gray-200 text-gray-600 py-1 px-2 rounded-md text-[10px] font-medium flex items-center gap-1 btn-press"
+                                                                            >
+                                                                                <Icon name="Phone" size={10} /> {item.phone}
+                                                                            </button>
+                                                                        )}
+                                                                        <a 
+                                                                            href={item.mapLink} 
+                                                                            target="_blank"
+                                                                            className="bg-blue-50 hover:bg-blue-100 text-blue-600 py-1 px-2 rounded-md text-[10px] font-medium flex items-center gap-1 btn-press"
+                                                                        >
+                                                                            <Icon name="Map" size={10} /> 地圖
+                                                                        </a>
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         ))}
                                                     </div>
