@@ -152,7 +152,6 @@
             );
         };
 
-        // --- Trip Data with Fixed Links (Google Maps Query) ---
         const tripData = [
             {
                 date: "2026/05/09",
@@ -163,7 +162,7 @@
                 hotelLink: "https://www.google.com/maps/search/?api=1&query=Comfort+Hotel+Kobe+Sannomiya",
                 highlights: [
                     { time: "10:15", type: "flight", title: "星宇航空 JR822 出發", desc: "台北 TPE ➔ 關西 KIX (14:00 抵達)" },
-                    { time: "14:30", type: "transport", title: "關西機場租車", desc: "預計直接租車前往神戶", phone: "072-456-8600", mapLink: "https://www.google.com/maps/search/?api=1&query=Kansai+Airport+Car+Rental" }, 
+                    { time: "14:30", type: "transport", title: "關西機場租車", desc: "14:30 開始租車 (租期至 5/16 14:30)", phone: "072-456-8600", mapLink: "https://www.google.com/maps/search/?api=1&query=Kansai+Airport+Car+Rental" }, 
                     { time: "16:00", type: "transport", title: "前往神戶", desc: "車程約 1~1.5 小時" },
                     { time: "18:00", type: "activity", title: "神戶三宮周邊", desc: "辦理入住，周邊簡單晚餐或逛街", phone: "078-271-3611", mapLink: "https://www.google.com/maps/search/?api=1&query=Kobe+Sannomiya+Station" }
                 ]
@@ -216,9 +215,10 @@
                 date: "2026/05/13",
                 day: "三",
                 location: "龜岡市",
-                hotel: "龜岡市住宿 (未定)",
-                hotelPhone: "0771-22-3131", // 龜岡市政府代用
-                hotelLink: "https://www.google.com/maps/search/?api=1&query=Kameoka+Station",
+                hotel: "Hotel Route Inn 京都龜岡站前",
+                hotelPhone: "0771-21-3331",
+                hotelLink: "https://www.google.com/maps/search/?api=1&query=Hotel+Route+Inn+Kyoto+Kameoka+Ekimae",
+                note: "ホテルルートイン京都亀岡駅前",
                 highlights: [
                     { time: "10:00", type: "transport", title: "前往龜岡", desc: "往南移動，接近京都市區外圍" },
                     { time: "13:00", type: "activity", title: "保津川遊船", desc: "龜岡乘船場", phone: "0771-22-5846", mapLink: "https://www.google.com/maps/search/?api=1&query=Hozugawa+River+Boat+Ride" },
@@ -229,13 +229,13 @@
                 date: "2026/05/14",
                 day: "四",
                 location: "龜岡市",
-                hotel: "龜岡市住宿 (未定)",
-                hotelPhone: "0771-22-3131",
-                hotelLink: "https://www.google.com/maps/search/?api=1&query=Kameoka+Station",
+                hotel: "Hotel Route Inn 京都龜岡站前",
+                hotelPhone: "0771-21-3331",
+                hotelLink: "https://www.google.com/maps/search/?api=1&query=Hotel+Route+Inn+Kyoto+Kameoka+Ekimae",
                 highlights: [
                     { time: "09:30", type: "activity", title: "嵯峨野觀光小火車", desc: "小火車龜岡站", phone: "0771-22-6001", mapLink: "https://www.google.com/maps/search/?api=1&query=Sagano+Scenic+Railway+Kameoka+Station" },
                     { time: "11:00", type: "activity", title: "嵐山半日遊", desc: "渡月橋、竹林 (建議搭JR或小火車前往)" },
-                    { time: "16:00", type: "activity", title: "湯之花溫泉鄉", desc: "建議參訪 翠泉 等旅館", phone: "0771-22-7575", mapLink: "https://www.google.com/maps/search/?api=1&query=Yunohana+Onsen" }
+                    { time: "16:00", type: "activity", title: "湯之花溫泉鄉", desc: "若想體驗日歸溫泉 (如:翠泉)", phone: "0771-22-7575", mapLink: "https://www.google.com/maps/search/?api=1&query=Yunohana+Onsen" }
                 ]
             },
             {
@@ -263,6 +263,7 @@
                 highlights: [
                     { time: "10:00", type: "activity", title: "臨空公園", desc: "散步、看海", phone: "072-469-7717", mapLink: "https://www.google.com/maps/search/?api=1&query=Rinku+Park" },
                     { time: "13:00", type: "activity", title: "AEON MALL 臨空泉南", desc: "超市補貨", phone: "072-480-6000", mapLink: "https://www.google.com/maps/search/?api=1&query=Aeon+Mall+Rinku+Sennan" },
+                    { time: "14:30", type: "transport", title: "辦理還車手續", desc: "租車行程結束", phone: "072-456-8600", mapLink: "https://www.google.com/maps/search/?api=1&query=Kansai+Airport+Car+Rental" },
                     { time: "16:00", type: "activity", title: "整理行李", desc: "打包戰利品" }
                 ]
             },
@@ -272,7 +273,7 @@
                 location: "HOME",
                 hotel: "溫暖的家",
                 highlights: [
-                    { time: "10:00", type: "transport", title: "前往關西機場", desc: "還車，辦理登機", phone: "072-455-2500", mapLink: "https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport" },
+                    { time: "10:00", type: "transport", title: "前往關西機場", desc: "搭乘電車/接駁車 (車程約 10 分鐘)", phone: "072-455-2500", mapLink: "https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport" },
                     { time: "13:25", type: "flight", title: "星宇航空 JR821 起飛", desc: "KIX ➔ TPE (15:20 抵達)" }
                 ]
             }
